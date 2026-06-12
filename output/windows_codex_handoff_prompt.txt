@@ -1,0 +1,58 @@
+你现在在 Windows 机器上的 Accio 环境里，目标是为周复盘自动化补一份 Windows 侧桥接，不要修改 Mac 侧文件。
+
+任务目标：
+1. 找到当前 Windows 本机 Accio 的授权状态文件和店铺上下文来源。
+2. 生成或更新 `output/current_shop_context.json`。
+3. 确认周报脚本能读取这个文件，不再依赖手工输入店铺名。
+4. 不要猜店铺 ID，不要把 Mac 路径带到 Windows。
+
+你要优先检查这些本机位置：
+- `%APPDATA%\\Accio`
+- `%USERPROFILE%\\.accio`
+- 当前 Accio 安装目录
+- 当前项目工作目录
+
+你要确认的字段只有这 6 个：
+```json
+{
+  "web_shop_id": "网页端店铺ID",
+  "web_shop_name": "网页端店铺名",
+  "accio_pair_shop_id": "Accio配对店铺ID",
+  "accio_pair_shop_name": "Accio配对店铺名",
+  "report_source_dir": "Windows上的周报源目录",
+  "report_output_dir": "Windows上的输出目录"
+}
+```
+
+执行原则：
+- 网页端店铺和 Accio 配对店铺必须是一一对应的同一店铺
+- 如果授权状态文件缺失、损坏、未连接，先停止并要求重新授权
+- 如果店铺映射找不到，先不要写入假值，先把你找到的本机证据列出来
+- 如果报表源目录和输出目录不明确，先问我，不要猜
+
+需要你先做的检查：
+1. 找 `current_auth_state.json` 或等价授权标记
+2. 找当前店铺/账号映射信息
+3. 找周报源目录和输出目录
+4. 写入 `output/current_shop_context.json`
+5. 验证脚本能读取这个文件
+
+如果你必须给我回传结果，请按这个格式：
+- 已找到的授权状态文件路径
+- 已找到的店铺映射证据
+- 最终写入的 `current_shop_context.json`
+- 是否需要我再补充 Windows 侧店铺码或目录
+
+注意：
+- 不要修改 Mac 侧的 `current_shop_context.json`
+- 不要把 `report_source_dir` 写成 `/Users/...`
+- 不要把 `report_output_dir` 写成 Mac 路径
+- 不要删除现有周报文件
+
+如果你需要一个更具体的 PowerShell 检查命令，可以先运行：
+```powershell
+Get-ChildItem "$env:APPDATA\Accio" -Force
+Get-ChildItem "$env:USERPROFILE\.accio" -Force
+```
+
+如果你能找到店铺上下文，就直接生成 `output/current_shop_context.json`，不要再等待人工确认。

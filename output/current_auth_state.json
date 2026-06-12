@@ -1,0 +1,14 @@
+{
+  "authorized": true,
+  "connected": true,
+  "authorized_at": "2026-04-24T09:53:26.130000+08:00",
+  "account_id": "1749696687",
+  "account_name": "769***@qq.com",
+  "scope": "alibaba.com",
+  "source": "mac-bridge",
+  "evidence": {
+    "credentials_enc_exists": true,
+    "sdk_log": "/Users/wukk/Library/Application Support/Accio/logs/sdk.log",
+    "connected_accounts": "/Users/wukk/.accio/accounts/1749696687/connected-accounts.json"
+  }
+}

@@ -1,0 +1,25 @@
+你在 Windows 机器上的 Accio 环境里，直接完成本机桥接。
+
+必须完成：
+1. 找到授权状态文件，确认已连接 / 已授权。
+2. 找到网页端店铺与 Accio 配对店铺的对应关系。
+3. 写入或更新 `output/current_shop_context.json`。
+4. 验证周报脚本能读取这个文件。
+
+硬性规则：
+- 不要猜店铺 ID。
+- 不要猜目录。
+- 不要写 Mac 路径。
+- 授权文件缺失、损坏、未连接时先停下并要求重新授权。
+- 店铺映射找不到时先列证据，不要写假值。
+
+按这个顺序做：
+1. 检查 `current_auth_state.json` 或等价标记。
+2. 检查店铺映射 / 当前店铺上下文。
+3. 确认周报源目录和输出目录。
+4. 写入 `output/current_shop_context.json`。
+5. 验证脚本能读取它。
+
+采集证据时运行 `windows_evidence_commands.txt`。
+整理结果时用 `windows_result_template.txt`。
+如果缺字段，回报四项：授权文件路径、店铺映射证据、写入的 JSON、是否还缺店铺码或目录。

@@ -1,0 +1,34 @@
+# Windows 侧 Accio / 周复盘证据采集命令
+# 目标：先确认授权状态、店铺映射、周报源目录，再交给 Codex 写 current_shop_context.json
+
+Write-Host "=== ACCIO ROOT ==="
+Get-ChildItem "$env:APPDATA\Accio" -Force |
+  Select-Object FullName, Length, LastWriteTime |
+  Format-Table -AutoSize
+
+Write-Host "=== AUTH STATE CANDIDATES ==="
+Get-ChildItem "$env:APPDATA\Accio" -Recurse -File -ErrorAction SilentlyContinue |
+  Where-Object { $_.Name -match 'auth|authorize|credential|connect|session' } |
+  Select-Object FullName, Length, LastWriteTime |
+  Format-Table -AutoSize
+
+Write-Host "=== SHOP / CONTEXT CANDIDATES ==="
+Get-ChildItem "$env:APPDATA\Accio" -Recurse -File -ErrorAction SilentlyContinue |
+  Where-Object { $_.Name -match 'shop|store|pair|context|current' } |
+  Select-Object FullName, Length, LastWriteTime |
+  Format-Table -AutoSize
+
+Write-Host "=== current_auth_state.json ==="
+Get-Content "$env:APPDATA\Accio\current_auth_state.json" -ErrorAction SilentlyContinue
+
+Write-Host "=== current_shop_context.json ==="
+Get-Content "$env:APPDATA\Accio\current_shop_context.json" -ErrorAction SilentlyContinue
+
+Write-Host "=== USERPROFILE .accio ==="
+Get-ChildItem "$env:USERPROFILE\.accio" -Force -ErrorAction SilentlyContinue |
+  Select-Object FullName, Length, LastWriteTime |
+  Format-Table -AutoSize
+
+Write-Host "=== ACCIO INSTALL PATH HINT ==="
+where.exe Accio
+where.exe accio

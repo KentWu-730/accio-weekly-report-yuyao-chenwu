@@ -1,0 +1,8 @@
+{
+  "web_shop_id": "网页端店铺ID",
+  "web_shop_name": "网页端店铺名",
+  "accio_pair_shop_id": "Accio配对店铺ID",
+  "accio_pair_shop_name": "Accio配对店铺名",
+  "report_source_dir": "D:/Accio/shops/shop_a/reports",
+  "report_output_dir": "D:/Accio/shops/shop_a/output"
+}

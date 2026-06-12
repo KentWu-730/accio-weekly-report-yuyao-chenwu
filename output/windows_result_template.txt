@@ -1,0 +1,34 @@
+# Windows 侧结果整理模板
+
+把你在 Windows 机器上跑出来的证据按下面顺序填好，然后交给 Windows 侧 Codex 写 `output/current_shop_context.json`。
+
+## 1. 授权状态
+- 授权状态文件路径：
+- 文件内容里表示已连接/已授权的字段：
+- 是否需要重新授权：
+
+## 2. 店铺映射
+- 网页端店铺 ID：
+- 网页端店铺名：
+- Accio 配对店铺 ID：
+- Accio 配对店铺名：
+- 证据来源路径：
+
+## 3. 周报目录
+- 周报源目录：
+- 周报输出目录：
+
+## 4. 最终写入的 JSON
+```json
+{
+  "web_shop_id": "",
+  "web_shop_name": "",
+  "accio_pair_shop_id": "",
+  "accio_pair_shop_name": "",
+  "report_source_dir": "",
+  "report_output_dir": ""
+}
+```
+
+## 5. 交给 Codex 的一句话
+- 请根据以上本机证据，写入或更新 `output/current_shop_context.json`，不要猜值，不要使用 Mac 路径。

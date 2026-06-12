@@ -1,0 +1,7 @@
+interface:
+  display_name: "Accio Weekly Review"
+  short_description: "Weekly fully completed natural-week review"
+  default_prompt: "Use $accio-weekly-review to review the most recent fully completed natural week of Alibaba.com International Station store performance, and keep the output strictly weekly."
+
+policy:
+  allow_implicit_invocation: false

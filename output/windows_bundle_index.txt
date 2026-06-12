@@ -1,0 +1,12 @@
+Windows 最小交接包：
+1. windows_single_entry.txt
+2. windows_master_handoff_short.txt
+3. windows_master_handoff.txt
+4. windows_codex_handoff_prompt_short.txt
+5. windows_shop_context_template.json
+6. windows_bundle_readme.txt
+7. windows_evidence_commands.txt
+8. windows_result_template.txt
+
+如果你只想直接让 Windows 侧 Codex 开工，先发第 1 个。
+如果你要分步执行，再按第 4、7、8 个拆开用。
