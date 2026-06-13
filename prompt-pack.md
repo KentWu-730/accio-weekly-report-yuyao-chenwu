@@ -1,207 +1,110 @@
-# Accio Prompt Pack
+# 周复盘提示词包
+
+## 周复盘主提示词
+
+请严格按照当前 `SKILL.md` 执行周复盘，且只把 `SKILL.md` 视为最终标准。
+
+必须遵守以下规则：
+
+1. 先确认当前激活店铺、授权状态和数据来源，再开始分析。
+2. 只分析最近一个已完整结束的自然周。
+3. 统计边界必须使用 `America/Los_Angeles`，默认按周日 00:00 到周六 23:59。
+4. 如果当前周尚未结束，必须明确排除当前周的半周数据。
+5. 主对比对象必须是上一个完整周，必要时再补充过去 4 个完整周均值。
+6. 周复盘正文必须全部使用中文。
+7. 不要使用英文章节标题、英文说明或英文表格表头。
+8. 只保留不可避免的专有名词、产品名、品牌名、指标名、URL 和 skill 名称原文。
+9. 周复盘必须详细，不能压缩成简短摘要。
+10. 所有结论都必须引用原始指标和来源字段。
+11. 如果任何必需数据无法获取，立刻输出 `data not retrieved` 并停止。
+12. 不要猜测，不要沿用旧报告，不要把临时目录当成最终结果。
+13. 周复盘结束后必须执行 `refresh-weekly-report.sh`。
+14. `refresh-weekly-report.sh` 必须同时刷新镜像输出、`latest.md` 和公共链接元数据。
+15. 周复盘只有在以下四项同时满足时才算完成：
+    - 周报 Markdown 已生成。
+    - Markdown 已写入 canonical 输出目录。
+    - `latest.md` 已更新到最新周报。
+    - 公共链接元数据已刷新为最新报告。
+16. 如果报告只存在于临时目录，必须视为未完成。
+17. 切换店铺后，必须基于当前激活店铺重新生成周报。
+18. 重新生成后的内容必须写回 canonical 输出目录。
+19. 周报可保留的公共链接只包括：
+    - `https://kentwu-730.github.io/weekly-report-share/weekly_report/latest.html`
+    - `weekly_report/latest.md`
+20. 不要把自定义 Markdown 渲染器写进周报完成标准或公共链接清单。
+
+输出结构必须包含：
+
+1. 周度总览
+2. 核心 KPI 表
+3. 流量与渠道分析
+4. 全站推 / 付费流量分析
+5. 产品分析
+6. 关键词分析
+7. 异常与归因
+8. 下周行动建议
+
+全站推 / 付费流量部分必须单独展开，并至少覆盖：
+
+- 曝光、点击、CTR、CPC、花费
+- 商机、询盘、订单
+- 商机成本、实际转化成本、预算消耗率、剩余预算
+- 关键词级、产品级、计划级的效率
+- 高消耗低转化项、加价候选、降价或否词候选
+- 预算迁移建议与出价调整建议
+
+其他要求：
+
+- 只分析启用中或活跃中的计划，停用计划不作为核心判断依据。
+- 如果计划处于学习期前 7 天，必须标记为冷启动，并避免频繁建议改价、改预算、换品、暂停或恢复。
+- 如果能识别全站推状态，必须说明成本保障是生效、结束还是无效。
+- 实际计费基准必须写清楚是按点击计费。
+- 实际商机成本必须按花费除以全站推商机转化来描述。
+- 每个关键产品至少给出 1 条、最多 3 条建议，并写清标题方向、卖点方向和关键词方向。
+- 异常判断要按 `现象 -> 原因假设 -> 推荐动作 -> 预期影响` 写。
+- 如果只是弱信号，必须明确标注为假设。
+- 下周行动建议至少 5 条，按优先级排序，并且要能直接执行。
+
+## 日常任务提示词
+
+### 日常诊断
+
+在开始分析前，先拉取实际的 Alibaba.com 国际站店铺和行业数据，覆盖当天的自然日。除非后端明确暴露了不同的店铺时区，否则日界线一律使用 `America/Los_Angeles`。如果任何必需指标缺失，直接输出 `data not retrieved` 并停止。
+
+要求：
+
+1. 先写明数据来源和日期范围。
+2. 先引用支持结论的原始字段，再给判断。
+3. 找出有真实机会但尚未覆盖的关键词。
+4. 列出应该优先优化的产品。
+5. 为每个产品给出标题、卖点和关键词建议。
+6. 输出当天最重要的 3 个动作。
+7. 结果要结构化、简洁、可执行。
+
+### 日常关键词扫描
+
+在开始挖词前，先拉取当天的实际店铺和行业数据。如果数据无法获取，直接输出 `data not retrieved` 并停止。
+
+要求：
+
+1. 先写明数据来源和日期范围。
+2. 先引用支持结论的原始字段。
+3. 重点找：
+   - 当前标题未覆盖的关键词
+   - 搜索增长高的关键词
+   - 买家意图强的关键词
+   - 适合标题、详情页和广告一起使用的词
+   - 可以立即优化的优先关键词
+4. 每行输出一个关键词簇。
+
+### 日常清理
+
+在开始产品复盘前，先拉取实际店铺和产品表现数据。如果数据无法获取，直接输出 `data not retrieved` 并停止。
 
-This file consolidates reusable prompt material extracted from the two PDF guides.
+规则：
 
-## 1. Shop Diagnosis Prompt
-
-### Role
-
-You are an Alibaba.com International Station senior operations consultant. You are blunt, data-driven, and operational. You do not add filler.
-
-### Task
-
-请按当前 `SKILL.md` 执行周复盘。必须基于最近一个已完整结束的自然周，统计边界使用 America/Los_Angeles（美国太平洋时间）；如果当前周尚未结束，必须明确排除半周数据。正文必须全部使用中文，不能输出简略摘要，必须保持详细、运营化、可执行的结构。周复盘结束后必须运行 `refresh-weekly-report.sh`，确保 `latest.md`、公共链接元数据和站点页面一起刷新。不要依赖旧报告、临时目录或旧链接；只以当前最新生成的周报为准。
-
-### Output
-
-1. Red/Yellow/Green status board
-2. Core bottlenecks
-3. Product cleanup list
-4. Action plan
-
-### Optional table
-
-| Product | Status | Problem | Recommended Action | Priority |
-| --- | --- | --- | --- | --- |
-
-### Diagnostic rules
-
-- Zero effect for 30 days and no engagement: cleanup candidate
-- Historical clicks or feedback: upgrade candidate
-- Inactive and zero performance: delete candidate
-- Low-quality product: detail-page upgrade candidate
-- Prioritize products with traffic potential
-
----
-
-## 2. Daily Keyword Scan Prompt
-
-### Role
-
-You are an International Station keyword mining and product optimization assistant.
-
-### Task
-
-Before any analysis, retrieve the actual Alibaba.com International Station store and industry data for today. Use America/Los_Angeles (US Pacific Time) for the daily boundary unless the backend explicitly exposes a different canonical shop timezone. If the data cannot be retrieved, stop and report `data not retrieved`.
-
-Based on the retrieved store and industry data, find:
-
-1. Undercovered keywords with real opportunity
-2. Products that should be prioritized for optimization
-3. Title, selling point, and keyword suggestions for each product
-4. The 3 best actions to execute today
-
-### Output
-
-1. `Keyword clusters`
-2. `Priority products`
-3. `Optimization suggestions`
-4. `Top 3 actions`
-
-### Data rules
-
-- State the source and date range used
-- Quote the raw fields that support each conclusion
-- Do not invent metrics, rankings, or coverage gaps
-- If the required data is missing, stop and report that it was not retrieved
-
-### Optional table
-
-| Keyword | Type | Opportunity | Covered In Title | Recommended Action |
-| --- | --- | --- | --- | --- |
-
-| Product | Current Status | Main Issue | Suggested Title Direction | Suggested Selling Point | Priority |
-| --- | --- | --- | --- | --- | --- |
-
----
-
-## 3. Weekly Review Prompt
-
-### Role
-
-You are a weekly International Station review analyst.
-
-### Task
-
-请按当前 `SKILL.md` 执行周复盘。必须基于最近一个已完整结束的自然周，统计边界使用 America/Los_Angeles（美国太平洋时间）；如果当前周尚未结束，必须明确排除半周数据。正文必须全部使用中文，不能输出简略摘要，必须保持详细、运营化、可执行的结构。周复盘结束后必须运行 `refresh-weekly-report.sh`，确保 `latest.md`、公共链接元数据和站点页面一起刷新。不要依赖旧报告、临时目录或旧链接；只以当前最新生成的周报为准。
-
-### Output
-
-1. Top changes this period
-2. Keywords to add
-3. Products to optimize
-4. Next actions
-
-### Data rules
-
-- State the exact week range and sources used
-- Compare the main week against the previous fully completed week, not the partial current week
-- When available, also compare against the average of the last 4 fully completed weeks
-- Quote the raw metrics and source fields behind the review
-- Do not guess missing numbers
-- Do not fabricate comparisons
-- Do not infer trend direction without raw numbers
-
-### Optional table
-
-| Area | This Week | Last Week | Change | Interpretation | Next Move |
-| --- | --- | --- | --- | --- | --- |
-
----
-
-## 4. Title Matrix Prompt
-
-### Keyword-driven
-
-Use when the user provides a product keyword.
-
-```text
-You are an Alibaba.com International Station title matrix specialist.
-When I give you a product keyword, generate 15 to 20 high-conversion English titles.
-Requirements:
-1. Keep each title within 110 to 120 characters and never exceed 128 characters.
-2. Use Title Case.
-3. Do not use punctuation.
-4. Do not repeat the same word inside one title.
-5. Reuse the core keyword root, but vary modifiers, scenes, and intent words.
-6. Output one title per line with no explanation.
-7. Do not include the correct brand name of any third-party brand in the title.
-8. If compatibility must be mentioned, use generic safe wording only.
-```
-
-### Competitor-driven
-
-Use when the user provides competitor titles.
-
-```text
-You are an Alibaba.com International Station competitor title analysis specialist.
-When I give you competitor titles, first extract all reusable keyword roots and high-value phrases.
-Then rebuild them into a new title matrix.
-Requirements:
-1. Output the extracted phrases first.
-2. Each phrase should contain no more than 5 words.
-3. Then output 15 to 20 new titles.
-4. Keep each title within 110 to 120 characters and never exceed 128 characters.
-5. Use Title Case.
-6. Do not use punctuation.
-7. Do not repeat the same word inside one title.
-8. Output one item per line with no extra explanation.
-9. Do not include the correct brand name of any third-party brand in the title.
-10. If compatibility must be mentioned, use generic safe wording only.
-```
-
----
-
-## 5. Keyword Coverage Logic
-
-- Prioritize head keywords and long-tail keywords together
-- Prefer phrases not already covered in current product titles
-- Prefer keywords with real buyer intent and search growth
-- Prefer products with better supply-demand ratio and lower competition
-- Favor markets with higher APP and PC share when you want to reduce WAP noise
-
-### Coverage prompt
-
-```text
-Please first retrieve the actual Alibaba.com International Station store and industry data for the requested date range. If retrieval fails, stop and report that the data was not retrieved.
-
-Then identify:
-1. Keywords not yet covered in the store
-2. Keywords with rising search demand in the industry
-3. Buyer-preferred keywords worth putting into titles
-4. Products with a high supply-demand ratio and low competition
-5. Market opportunities where APP and PC traffic are stronger than WAP traffic
-Return the result in a structured and actionable format.
-```
-
----
-
-## 6. Table Templates
-
-### Product cleanup
-
-| Product | Traffic | Clicks | Feedback | Risk | Action | Priority |
-| --- | --- | --- | --- | --- | --- | --- |
-
-### Product optimization
-
-| Product | Main Problem | Title Direction | Selling Point Direction | Keyword Gap | Action |
-| --- | --- | --- | --- | --- | --- |
-
-### Daily action board
-
-| Action | Why It Matters | Expected Impact | Owner | Due Today |
-| --- | --- | --- | --- | --- |
-
----
-
-## 7. Suggested Recurring Tasks
-
-- Daily keyword scan
-- Daily product optimization scan
-- Daily inquiry review
-- Weekly shop review
-- Monthly full review
-- Product cleanup watchlist
-
-Keep each task focused on one operational outcome.
+1. 30 天无效果且无互动 -> 清理候选
+2. 有历史点击或反馈 -> 优化候选
+3. 非活跃且零表现 -> 删除候选
+4. 低质量产品 -> 详情页升级候选
+5. 输出要简洁，并给出优先级。

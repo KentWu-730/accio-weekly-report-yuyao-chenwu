@@ -17,7 +17,7 @@ from accio_paths import (
 )
 
 
-WEEKLY_REPORT_NAME_RE = re.compile(r"^weekly_report_\d{4}_\d{2}\.md$")
+WEEKLY_REPORT_NAME_RE = re.compile(r"^weekly_report_(\d{4})_(\d{2})\.md$")
 DEFAULT_ACCURATE_SOURCE_DIR = Path(
     "/Users/wukk/.accio/accounts/1749696687/agents/DID-D464A3-31D464A3U1777360-4698-D4DA77/project/reports"
 )
@@ -75,7 +75,7 @@ def load_auth_state() -> dict[str, str]:
 
 def weekly_report_sort_key(path: Path | str) -> tuple[int, int]:
     report_path = Path(path)
-    match = re.match(r"^weekly_report_(\d{4})_(\d{2})\.md$", report_path.name)
+    match = WEEKLY_REPORT_NAME_RE.match(report_path.name)
     if not match:
         return (-1, -1)
     return int(match.group(1)), int(match.group(2))

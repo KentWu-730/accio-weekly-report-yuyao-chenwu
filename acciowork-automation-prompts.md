@@ -1,133 +1,66 @@
-# Accio Work Automation Prompts
+# 周复盘自动化提示词
 
-## Daily International Station Diagnostic
+## 周复盘定时任务
 
-```text
-Before any analysis, you must first retrieve the actual Alibaba.com International Station store and industry data for the requested date range.
-Hard requirements:
-1. State the data source and date range you used. Use America/Los_Angeles (US Pacific Time) for all daily and weekly boundaries unless the backend explicitly exposes a different canonical shop timezone.
-2. Quote the key raw fields you relied on before giving conclusions.
-3. If any required metric is missing, say "data not retrieved" and stop. Do not guess, infer, or fabricate numbers.
-4. Only after data retrieval, output today's diagnostic and optimization plan.
-5. Identify undercovered keywords with real opportunity.
-6. List products that should be optimized first.
-7. For each product, give title, selling point, and keyword optimization suggestions.
-8. Output the top 3 actions to execute today.
-9. Keep the result structured, concise, and directly actionable.
-```
+请严格按照当前 `SKILL.md` 执行周复盘，且只把 `SKILL.md` 视为最终标准。
 
-## Daily Keyword Mining
+必须遵守以下规则：
 
-```text
-Before mining keywords, retrieve the actual Alibaba.com International Station store and industry data for today.
-Hard requirements:
-1. State the data source and date range used. Use America/Los_Angeles (US Pacific Time) for the daily boundary unless the backend explicitly exposes a different canonical shop timezone.
-2. Quote the raw keyword and performance fields that support your output.
-3. If the data cannot be retrieved, respond with "data not retrieved" and do not continue.
-4. Focus on:
-   - Keywords not yet covered by current titles
-   - Keywords with high search growth
-   - Buyer-intent keywords with strong conversion potential
-   - Phrases useful for titles, detail pages, and ads
-   - Prioritized keywords for immediate optimization
-5. Output one keyword cluster per line.
-```
+1. 先确认当前激活店铺、授权状态和数据来源，再开始分析。
+2. 只分析最近一个已完整结束的自然周。
+3. 统计边界必须使用 `America/Los_Angeles`，默认按周日 00:00 到周六 23:59。
+4. 如果当前周尚未结束，必须明确排除当前周的半周数据。
+5. 主对比对象必须是上一个完整周，必要时再补充过去 4 个完整周均值。
+6. 周复盘正文必须全部使用中文。
+7. 不要使用英文章节标题、英文说明或英文表格表头。
+8. 只保留不可避免的专有名词、产品名、品牌名、指标名、URL 和 skill 名称原文。
+9. 周复盘必须详细，不能压缩成简短摘要。
+10. 所有结论都必须引用原始指标和来源字段。
+11. 如果任何必需数据无法获取，立刻输出 `data not retrieved` 并停止。
+12. 不要猜测，不要沿用旧报告，不要把临时目录当成最终结果。
+13. 周复盘结束后必须执行 `refresh-weekly-report.sh`。
+14. `refresh-weekly-report.sh` 必须同时刷新镜像输出、`latest.md` 和公共链接元数据。
+15. 周复盘只有在以下四项同时满足时才算完成：
+    - 周报 Markdown 已生成。
+    - Markdown 已写入 canonical 输出目录。
+    - `latest.md` 已更新到最新周报。
+    - 公共链接元数据已刷新为最新报告。
+16. 如果报告只存在于临时目录，必须视为未完成。
+17. 切换店铺后，必须基于当前激活店铺重新生成周报。
+18. 重新生成后的内容必须写回 canonical 输出目录。
+19. 周报可保留的公共链接只包括：
+    - `https://kentwu-730.github.io/weekly-report-share/weekly_report/latest.html`
+    - `weekly_report/latest.md`
+20. 不要把自定义 Markdown 渲染器写进周报完成标准或公共链接清单。
 
-## Daily Product Cleanup
+输出结构必须包含：
 
-```text
-Before reviewing products, retrieve the actual Alibaba.com International Station store and product performance data.
-Hard requirements:
-1. State the data source and date range used. Use America/Los_Angeles (US Pacific Time) for the daily boundary unless the backend explicitly exposes a different canonical shop timezone.
-2. Quote the raw product metrics that support your classification.
-3. If the required product data cannot be retrieved, say "data not retrieved" and stop.
-4. Only then classify products into keep, upgrade, or delete.
-Rules:
-1. Zero effect for 30 days and no engagement -> cleanup candidate
-2. Historical clicks or feedback -> upgrade candidate
-3. Inactive and zero performance -> delete candidate
-4. Low-quality product -> detail page upgrade candidate
-5. Output a concise action list with priorities.
-```
+1. 周度总览
+2. 核心 KPI 表
+3. 流量与渠道分析
+4. 全站推 / 付费流量分析
+5. 产品分析
+6. 关键词分析
+7. 异常与归因
+8. 下周行动建议
 
-## Weekly Shop Review
+全站推 / 付费流量部分必须单独展开，并至少覆盖：
 
-```text
-Temporary working directories are allowed for intermediate processing only. They must be treated as scratch space, not as the final source of truth.
-The final weekly report must be written back to the canonical weekly report output directory. A report that exists only in a temporary directory does not count as complete.
-The canonical completion path is `refresh-weekly-report.sh`, which must be run after report generation so the mirrored output, `latest.md`, and public-link metadata are refreshed together.
-This task is only complete when all of the following are true:
-1. The weekly report Markdown has been generated.
-2. The Markdown file has been written to the canonical output directory.
-3. latest.md has been updated to point to the newest weekly report.
-4. The public-link metadata has been refreshed to match the newest report.
-If the report exists only in a temporary directory, the task must be treated as incomplete and must not be declared successful.
-After switching shops, the report must be regenerated from the active shop context and written back to the canonical output directory so the same links always open the latest weekly report for the currently active shop.
+- 曝光、点击、CTR、CPC、花费
+- 商机、询盘、订单
+- 商机成本、实际转化成本、预算消耗率、剩余预算
+- 关键词级、产品级、计划级的效率
+- 高消耗低转化项、加价候选、降价或否词候选
+- 预算迁移建议与出价调整建议
 
-Before reviewing the week, retrieve the actual Alibaba.com International Station store backend, ad, and product data for the most recent fully completed natural week in America/Los_Angeles (US Pacific Time), defined as Sunday 00:00 to Saturday 23:59. If today is still inside the current natural week, do not use the partial current week for comparison; always report the last fully completed week as the main period.
-Hard requirements:
-1. State the exact week range and the data sources used.
-2. Compare the main week against the previous fully completed week, not the partial current week.
-3. When available, also compare against the average of the last 4 fully completed weeks.
-4. Quote the raw metrics and source fields you used for the review.
-5. If data retrieval fails, say "data not retrieved" and stop.
-6. Do not infer trend direction without raw numbers.
-7. Output:
-   - Top changes this period
-   - Keywords to add
-   - Products to optimize
-   - Next actions
-8. If the current week has just started, explicitly say that the partial current week is excluded from the comparison.
-```
+其他要求：
 
-## Monthly Store Diagnostic
-
-```text
-Before running the diagnostic, retrieve the actual Alibaba.com International Station store, ad, and product data for the month.
-Hard requirements:
-1. State the month range and the data sources used.
-2. Quote the raw metrics you relied on.
-3. If data retrieval fails, say "data not retrieved" and stop.
-4. Use the strongest available data to evaluate:
-   - Traffic
-   - Exposure
-   - Clicks
-   - Conversion
-   - Product quality
-   - Store vitality
-   - Cleanup risk
-5. Then output the red/yellow/green board, core bottlenecks, product cleanup list, and action plan.
-```
-
-## Competitor Title Decomposition
-
-```text
-Please decompose the following competitor titles into reusable keyword roots and high-value phrases.
-Then rebuild them into a new high-conversion title matrix.
-Rules:
-1. Each extracted phrase should contain no more than 5 words.
-2. Then output 15 to 20 new titles.
-3. Keep each title within 110 to 120 characters and never exceed 128 characters.
-4. Use Title Case.
-5. Do not use punctuation.
-6. Do not repeat the same word inside one title.
-7. Output one line per item, with no extra explanation.
-8. Do not include the correct brand name of any third-party brand in the title.
-9. If compatibility must be mentioned, use generic safe wording only.
-```
-
-## Product Keyword to Title Matrix
-
-```text
-Please generate a title matrix from this product keyword.
-Rules:
-1. Output 15 to 20 titles.
-2. Keep each title within 110 to 120 characters and never exceed 128 characters.
-3. Use Title Case.
-4. Do not use punctuation.
-5. Do not repeat the same word inside one title.
-6. Reuse the core keyword root, but vary modifiers, scenes, and intent terms.
-7. Output one line per title, with no explanation.
-8. Do not include the correct brand name of any third-party brand in the title.
-9. If compatibility must be mentioned, use generic safe wording only.
-```
+- 只分析启用中或活跃中的计划，停用计划不作为核心判断依据。
+- 如果计划处于学习期前 7 天，必须标记为冷启动，并避免频繁建议改价、改预算、换品、暂停或恢复。
+- 如果能识别全站推状态，必须说明成本保障是生效、结束还是无效。
+- 实际计费基准必须写清楚是按点击计费。
+- 实际商机成本必须按花费除以全站推商机转化来描述。
+- 每个关键产品至少给出 1 条、最多 3 条建议，并写清标题方向、卖点方向和关键词方向。
+- 异常判断要按 `现象 -> 原因假设 -> 推荐动作 -> 预期影响` 写。
+- 如果只是弱信号，必须明确标注为假设。
+- 下周行动建议至少 5 条，按优先级排序，并且要能直接执行。

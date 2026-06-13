@@ -10,7 +10,7 @@ from accio_paths import ROOT, SITE_DIR, WEEKLY_REPORT_DIR
 from accio_paths import CURRENT_SHOP_CONTEXT_FILE
 
 
-WEEKLY_REPORT_NAME_RE = re.compile(r"^weekly_report_\d{4}_\d{2}\.md$")
+WEEKLY_REPORT_NAME_RE = re.compile(r"^weekly_report_(\d{4})_(\d{2})\.md$")
 
 
 def read_text(path: Path) -> str:
@@ -49,7 +49,7 @@ def canonical_weekly_reports() -> list[Path]:
 
 def weekly_report_sort_key(path: Path | str) -> tuple[int, int]:
     report_path = Path(path)
-    match = re.match(r"^weekly_report_(\d{4})_(\d{2})\.md$", report_path.name)
+    match = WEEKLY_REPORT_NAME_RE.match(report_path.name)
     if not match:
         return (-1, -1)
     return int(match.group(1)), int(match.group(2))
@@ -329,6 +329,7 @@ def sync_site() -> None:
         write_text(weekly_out / "latest.html", latest_html)
         write_text(weekly_out / "latest", build_latest_alias_page())
         write_text(mobile_out / "latest.html", latest_html)
+        write_text(weekly_out / "latest_source.txt", latest_md.name + "\n")
 
     shutil.copy2(ROOT / "site" / "md-viewer.html", SITE_DIR / "index.html")
 

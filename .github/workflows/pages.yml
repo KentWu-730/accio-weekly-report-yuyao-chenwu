@@ -5,7 +5,12 @@ on:
     branches:
       - main
     paths:
-      - 'accio-weekly-report-upload.zip'
+      - 'site/**'
+      - 'output/**'
+      - 'build_github_pages_site.py'
+      - 'md_to_html.py'
+      - 'sync_weekly_reports.py'
+      - 'accio_paths.py'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -24,10 +29,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Unpack site bundle
-        run: |
-          unzip -o accio-weekly-report-upload.zip -d .
 
       - name: Set up Python
         uses: actions/setup-python@v5
