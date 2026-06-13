@@ -48,7 +48,7 @@
 python3 build_github_pages_site.py
 ```
 
-如果你只更新了 `project/reports/*.md` 或 `output/weekly_report/*.md`，想顺手把网页和钉钉通知一起刷新，可以直接运行：
+如果你只更新了 `output/weekly_report/*.md`，想顺手把网页和钉钉通知一起刷新，可以直接运行：
 
 ```bash
 ./publish-weekly-report.sh
@@ -60,7 +60,7 @@ python3 build_github_pages_site.py
 
 1. 把仓库推到 GitHub 的 `main` 分支。
 2. 在仓库设置里打开 Pages，并把 Source 设为 `GitHub Actions`。
-3. 以后只要更新 `project/reports/*.md` 或重新生成站点，推送后会自动发布。
+3. 以后只要更新 `site/**`、`output/**` 或重新生成站点，推送后会自动发布。
 4. 发布完成后，客户直接访问生成的 `github.io` 地址即可。
 
 ## 说明
