@@ -73,6 +73,14 @@ def load_auth_state() -> dict[str, str]:
     return {str(k): str(v) for k, v in data.items() if v is not None}
 
 
+def weekly_report_sort_key(path: Path | str) -> tuple[int, int]:
+    report_path = Path(path)
+    match = re.match(r"^weekly_report_(\d{4})_(\d{2})\.md$", report_path.name)
+    if not match:
+        return (-1, -1)
+    return int(match.group(1)), int(match.group(2))
+
+
 def is_truthy(value: str) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "y", "connected", "authorized", "ok"}
 
@@ -145,7 +153,7 @@ def newest_md_file(directory: Path) -> Path | None:
     ]
     if not candidates:
         return None
-    return max(candidates, key=lambda path: path.stat().st_mtime)
+    return max(candidates, key=weekly_report_sort_key)
 
 
 def ensure_share_section(md_text: str) -> str:
@@ -174,7 +182,7 @@ def canonical_weekly_markdown_files(directory: Path) -> list[Path]:
             for path in directory.glob("*.md")
             if path.is_file() and WEEKLY_REPORT_NAME_RE.match(path.name)
         ],
-        key=lambda path: path.stat().st_mtime,
+        key=weekly_report_sort_key,
     )
 
 

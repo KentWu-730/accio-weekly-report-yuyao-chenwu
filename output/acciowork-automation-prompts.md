@@ -53,31 +53,7 @@ Rules:
 ## Weekly Shop Review
 
 ```text
-Temporary working directories are allowed for intermediate processing only. They must be treated as scratch space, not as the final source of truth.
-The final weekly report must be written back to the canonical weekly report output directory. A report that exists only in a temporary directory does not count as complete.
-The canonical completion path is `refresh-weekly-report.sh`, which must be run after report generation so the mirrored output, `latest.md`, and public-link metadata are refreshed together.
-This task is only complete when all of the following are true:
-1. The weekly report Markdown has been generated.
-2. The Markdown file has been written to the canonical output directory.
-3. latest.md has been updated to point to the newest weekly report.
-4. The public-link metadata has been refreshed to match the newest report.
-If the report exists only in a temporary directory, the task must be treated as incomplete and must not be declared successful.
-After switching shops, the report must be regenerated from the active shop context and written back to the canonical output directory so the same links always open the latest weekly report for the currently active shop.
-
-Before reviewing the week, retrieve the actual Alibaba.com International Station store backend, ad, and product data for the most recent fully completed natural week in America/Los_Angeles (US Pacific Time), defined as Sunday 00:00 to Saturday 23:59. If today is still inside the current natural week, do not use the partial current week for comparison; always report the last fully completed week as the main period.
-Hard requirements:
-1. State the exact week range and the data sources used.
-2. Compare the main week against the previous fully completed week, not the partial current week.
-3. When available, also compare against the average of the last 4 fully completed weeks.
-4. Quote the raw metrics and source fields you used for the review.
-5. If data retrieval fails, say "data not retrieved" and stop.
-6. Do not infer trend direction without raw numbers.
-7. Output:
-   - Top changes this period
-   - Keywords to add
-   - Products to optimize
-   - Next actions
-8. If the current week has just started, explicitly say that the partial current week is excluded from the comparison.
+请按当前 `SKILL.md` 执行周复盘。必须基于最近一个已完整结束的自然周，统计边界使用 America/Los_Angeles（美国太平洋时间）；如果当前周尚未结束，必须明确排除半周数据。正文必须全部使用中文，不能输出简略摘要，必须保持详细、运营化、可执行的结构。周复盘结束后必须运行 `refresh-weekly-report.sh`，确保 `latest.md`、公共链接元数据和站点页面一起刷新。不要依赖旧报告、临时目录或旧链接；只以当前最新生成的周报为准。
 ```
 
 ## Monthly Store Diagnostic

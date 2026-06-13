@@ -17,14 +17,22 @@ def slug(text: str) -> str:
 
 
 def inline_md(text: str) -> str:
+    placeholders: list[str] = []
+
+    def stash(html_snippet: str) -> str:
+        placeholders.append(html_snippet)
+        return f"@@MD{len(placeholders) - 1}@@"
+
     out = esc(text)
-    out = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", r'<img alt="\1" src="\2" />', out)
-    out = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2" target="_blank" rel="noopener noreferrer">\1</a>', out)
-    out = re.sub(r"`([^`]+)`", r"<code>\1</code>", out)
-    out = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", out)
-    out = re.sub(r"__([^_]+)__", r"<strong>\1</strong>", out)
-    out = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", out)
-    out = re.sub(r"_([^_]+)_", r"<em>\1</em>", out)
+    out = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", lambda m: stash(f'<img alt="{m.group(1)}" src="{m.group(2)}" />'), out)
+    out = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", lambda m: stash(f'<a href="{m.group(2)}" target="_blank" rel="noopener noreferrer">{m.group(1)}</a>'), out)
+    out = re.sub(r"`([^`]+)`", lambda m: stash(f"<code>{m.group(1)}</code>"), out)
+    out = re.sub(r"\*\*([^*]+)\*\*", lambda m: f"<strong>{m.group(1)}</strong>", out)
+    out = re.sub(r"__([^_]+)__", lambda m: f"<strong>{m.group(1)}</strong>", out)
+    out = re.sub(r"(?<!\w)\*([^*]+)\*(?!\w)", lambda m: f"<em>{m.group(1)}</em>", out)
+    out = re.sub(r"(?<!\w)_([^_]+)_(?!\w)", lambda m: f"<em>{m.group(1)}</em>", out)
+    for idx, html_snippet in enumerate(placeholders):
+        out = out.replace(f"@@MD{idx}@@", html_snippet)
     return out
 
 

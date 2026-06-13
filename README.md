@@ -70,6 +70,9 @@ python3 build_github_pages_site.py
 - `site/index.html` 是电脑端入口，客户可以直接上传 `.md` 并查看渲染结果。
 - `site/weekly_report/latest.html` 是手机端最新周报渲染页。
 - `site/md-viewer.html` 是电脑端公开渲染器，客户可以直接上传 `.md` 并查看渲染结果。
+- 当前周报对外固定入口是：
+  - `https://kentwu-730.github.io/weekly-report-share/md-viewer.html`
+  - `https://kentwu-730.github.io/weekly-report-share/weekly_report/latest.html`
 - `site/` 是最终发布产物，GitHub Actions 会自动从这里部署。
 - `build_github_pages_site.py` 会自动同步周报并产出可发布目录。
 - `publish-weekly-report.sh` 会在重建后自动把最新链接发到通知通道；如果本机存在 `accio-dingtalk-notify`，会优先走 Accio 通道，否则回退到 webhook。

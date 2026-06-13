@@ -83,7 +83,6 @@
 5. **[P2] 标题批改**：批量更新 TOP 10 产品标题，确保前 40 个字符内包含“Fine Mist”和“Continuous”修饰词。
 
 ## 公共链接 (Public Links)
-1. 桌面端预览链接: [https://asource.com/work/report/desktop/2026/23](https://asource.com/work/report/desktop/2026/23)
-2. 移动端最新报告: [https://asource.com/work/report/mobile/latest](https://asource.com/work/report/mobile/latest)
-3. Markdown 源码文件: [file:///Users/wukk/AccioWork/2026-06-12-20-51-30/weekly_report_2026_23.md](file:///Users/wukk/AccioWork/2026-06-12-20-51-30/weekly_report_2026_23.md)
-4. 自定义 Markdown 渲染链接: link not available
+1. 桌面端预览链接: [https://kentwu-730.github.io/weekly-report-share/md-viewer.html](https://kentwu-730.github.io/weekly-report-share/md-viewer.html)
+2. 移动端最新报告: [https://kentwu-730.github.io/weekly-report-share/weekly_report/latest.html](https://kentwu-730.github.io/weekly-report-share/weekly_report/latest.html)
+3. Markdown 源码文件: [file:///Users/wukk/Documents/Accio-YuyaoChenwu/output/weekly_report/weekly_report_2026_23.md](file:///Users/wukk/Documents/Accio-YuyaoChenwu/output/weekly_report/weekly_report_2026_23.md)

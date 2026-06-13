@@ -25,7 +25,7 @@ def write_text(path: Path, content: str) -> None:
 def newest_path(paths: list[Path]) -> Path | None:
     if not paths:
         return None
-    return max(paths, key=lambda path: path.stat().st_mtime)
+    return max(paths, key=weekly_report_sort_key)
 
 
 def extract_markdown_title(md: str, fallback: str) -> str:
@@ -43,8 +43,16 @@ def canonical_weekly_reports() -> list[Path]:
             for path in WEEKLY_REPORT_DIR.glob("*.md")
             if path.is_file() and WEEKLY_REPORT_NAME_RE.match(path.name)
         ],
-        key=lambda path: path.stat().st_mtime,
+        key=weekly_report_sort_key,
     )
+
+
+def weekly_report_sort_key(path: Path | str) -> tuple[int, int]:
+    report_path = Path(path)
+    match = re.match(r"^weekly_report_(\d{4})_(\d{2})\.md$", report_path.name)
+    if not match:
+        return (-1, -1)
+    return int(match.group(1)), int(match.group(2))
 
 
 def load_shop_context() -> dict[str, str]:

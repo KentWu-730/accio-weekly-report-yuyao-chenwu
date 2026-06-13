@@ -109,8 +109,7 @@ When used for recurring tasks, output:
   - budget reallocation by keyword, product, and campaign
   - inquiry follow-up or conversion fixes for high-spend low-conversion items
 - Public links:
-  - 自定义Markdown渲染：`https://kentwu-730.github.io/weekly-report-share/md-viewer.html`
-  - 电脑端：`https://kentwu-730.github.io/weekly-report-share/weekly_report/latest.html`
+  - 电脑端：`https://kentwu-730.github.io/weekly-report-share/md-viewer.html`
   - 手机端：`https://kentwu-730.github.io/weekly-report-share/weekly_report/latest.html`
   - 最新报告源文件：`weekly_report/latest.md`
 
