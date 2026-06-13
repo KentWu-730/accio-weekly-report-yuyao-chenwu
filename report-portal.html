@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Accio 报告门户</title>
+  <style>
+    :root{
+      --bg:#f4efe5;
+      --panel:#fffaf2;
+      --text:#201916;
+      --muted:#71655a;
+      --line:#dfd2c0;
+      --accent:#0f766e;
+      --accent-2:#92400e;
+      --shadow:0 24px 70px rgba(32,25,22,.10);
+      --radius:26px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(15,118,110,.13), transparent 28%),
+        radial-gradient(circle at top right, rgba(146,64,14,.10), transparent 24%),
+        linear-gradient(180deg,#fbf7ef 0%,#efe6d7 100%);
+    }
+    .shell{
+      height:100%;
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:18px;
+      padding:18px;
+    }
+    .panel,.viewer{
+      background:rgba(255,250,242,.86);
+      border:1px solid rgba(223,210,192,.92);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      min-width:0;
+    }
+    .panel{
+      display:flex;
+      flex-direction:column;
+    }
+    .head{
+      padding:22px 22px 16px;
+      border-bottom:1px solid var(--line);
+    }
+    .eyebrow{
+      display:inline-flex;
+      padding:6px 11px;
+      border-radius:999px;
+      background:rgba(15,118,110,.10);
+      color:var(--accent);
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+    h1,h2,p{margin:0}
+    h1{font-size:24px;letter-spacing:-.03em}
+    .head p{margin-top:8px;color:var(--muted);line-height:1.65;font-size:13px}
+    .controls{
+      padding:18px 22px;
+      display:grid;
+      gap:12px;
+      border-bottom:1px solid var(--line);
+    }
+    .dropzone{
+      border:1.5px dashed #cab8a4;
+      border-radius:20px;
+      padding:16px;
+      background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(240,232,219,.48));
+      color:var(--muted);
+      line-height:1.65;
+      transition:.18s ease;
+    }
+    .dropzone.dragover{
+      background:rgba(15,118,110,.08);
+      border-color:var(--accent);
+      color:var(--text);
+    }
+    .row{display:flex;flex-wrap:wrap;gap:10px}
+    button,input::file-selector-button{
+      border:0;
+      border-radius:999px;
+      padding:11px 14px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    button{background:var(--text);color:#fff}
+    button.secondary{background:#e9dfd1;color:var(--text)}
+    button.ghost{background:transparent;color:var(--accent);border:1px solid rgba(15,118,110,.24)}
+    .files{
+      padding:14px 12px 18px 18px;
+      overflow:auto;
+      flex:1;
+    }
+    .files h2{
+      font-size:13px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin:0 0 10px 6px;
+    }
+    .file-item{
+      display:grid;
+      gap:8px;
+      padding:14px 14px 12px;
+      border-radius:18px;
+      border:1px solid transparent;
+      margin-bottom:10px;
+      background:rgba(255,255,255,.55);
+      cursor:pointer;
+    }
+    .file-item.active{
+      border-color:rgba(15,118,110,.35);
+      background:rgba(15,118,110,.06);
+    }
+    .file-item strong{font-size:14px;line-height:1.4}
+    .file-item span{font-size:12px;color:var(--muted)}
+    .meta{
+      padding:14px 22px 18px;
+      border-top:1px solid var(--line);
+      display:grid;
+      gap:10px;
+    }
+    .kv{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      font-size:13px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.6);
+      border:1px solid rgba(223,210,192,.6);
+      color:var(--muted);
+    }
+    .viewer{
+      display:grid;
+      grid-template-rows:auto auto 1fr;
+    }
+    .topbar,.subbar{
+      padding:16px 20px;
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,250,242,.95), rgba(255,250,242,.72));
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .title-wrap{min-width:0}
+    .title-wrap h2{font-size:20px}
+    .title-wrap p{margin-top:4px;color:var(--muted);font-size:13px;line-height:1.5}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .subbar{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      align-items:center;
+    }
+    .tab{
+      flex:0 0 auto;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+    }
+    .tab.active{
+      background:rgba(15,118,110,.1);
+      color:var(--accent);
+      border-color:rgba(15,118,110,.25);
+    }
+    .content{
+      overflow:auto;
+      padding:28px;
+    }
+    .paper{
+      max-width:1040px;
+      margin:0 auto;
+      background:rgba(255,255,255,.84);
+      border:1px solid rgba(223,210,192,.7);
+      border-radius:28px;
+      box-shadow:0 22px 50px rgba(32,25,22,.06);
+      padding:36px 40px 44px;
+      min-height:calc(100vh - 190px);
+    }
+    .paper h1,.paper h2,.paper h3,.paper h4{scroll-margin-top:20px;line-height:1.25;letter-spacing:-.02em}
+    .paper h1{font-size:34px;margin:0 0 18px}
+    .paper h2{font-size:25px;margin:32px 0 14px}
+    .paper h3{font-size:20px;margin:26px 0 10px}
+    .paper p,.paper li{font-size:15px;line-height:1.86;color:#2b241f}
+    .paper ul,.paper ol{padding-left:1.3em}
+    .paper li{margin:5px 0}
+    .paper blockquote{
+      margin:18px 0;
+      padding:14px 18px;
+      border-left:4px solid var(--accent);
+      background:rgba(15,118,110,.07);
+      color:#35504b;
+      border-radius:0 14px 14px 0;
+    }
+    .paper table{
+      width:100%;
+      border-collapse:collapse;
+      margin:18px 0;
+      display:block;
+      overflow:auto;
+      border-radius:16px;
+    }
+    .paper th,.paper td{
+      border:1px solid #e2d7c8;
+      padding:10px 12px;
+      font-size:14px;
+      text-align:left;
+      vertical-align:top;
+    }
+    .paper thead th{background:#ede3d3}
+    .paper pre{
+      background:#111827;
+      color:#e5e7eb;
+      padding:16px 18px;
+      border-radius:18px;
+      overflow:auto;
+    }
+    .paper code{
+      background:#efe7db;
+      padding:2px 6px;
+      border-radius:6px;
+      color:#3b2d20;
+    }
+    .paper pre code{background:transparent;color:inherit;padding:0}
+    .paper a{color:var(--accent);text-decoration:none}
+    .paper a:hover{text-decoration:underline}
+    .empty{
+      display:grid;
+      place-items:center;
+      min-height:60vh;
+      text-align:center;
+      color:var(--muted);
+    }
+    .empty .card{
+      max-width:560px;
+      background:rgba(255,255,255,.8);
+      border:1px solid var(--line);
+      border-radius:28px;
+      padding:28px;
+      box-shadow:var(--shadow);
+    }
+    @media (max-width: 1100px){
+      .shell{grid-template-columns:1fr}
+      .viewer{grid-template-rows:auto auto 1fr}
+      .paper{min-height:auto;padding:24px}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="panel">
+      <div class="head">
+        <div class="eyebrow">Batch Report Portal</div>
+        <h1>多份周报统一查看</h1>
+        <p>适合 Accio 周报、诊断报告、日报合集。一次加载多个 `.md` 文件，切换文件就能看，不需要客户知道 Markdown 是什么。</p>
+      </div>
+      <div class="controls">
+        <div class="dropzone" id="dropzone">
+          <strong>拖拽多个 .md 文件</strong><br />
+          也可以点击选择文件。支持批量导入并自动生成可点击列表。
+        </div>
+        <input id="fileInput" type="file" accept=".md,.markdown,text/markdown,text/plain" multiple />
+        <div class="row">
+          <button id="sampleBtn">载入示例</button>
+          <button id="clearBtn" class="secondary">清空</button>
+        </div>
+      </div>
+      <div class="files">
+        <h2>文件列表</h2>
+        <div id="fileList" style="color:#71655a;font-size:13px;line-height:1.7;padding:6px 8px;">暂未加载文件。</div>
+      </div>
+      <div class="meta">
+        <div class="kv"><span>当前文件</span><strong id="metaFile">未加载</strong></div>
+        <div class="kv"><span>字符数</span><strong id="metaChars">0</strong></div>
+        <div class="kv"><span>标题数</span><strong id="metaHeadings">0</strong></div>
+      </div>
+    </aside>
+
+    <main class="viewer">
+      <div class="topbar">
+        <div class="title-wrap">
+          <h2 id="docTitle">报告预览</h2>
+          <p id="docSubtitle">选择一个文件开始预览，或直接上传多份报告。</p>
+        </div>
+        <div class="actions">
+          <button id="copyMdBtn" class="secondary">复制 Markdown</button>
+          <button id="downloadHtmlBtn" class="secondary">下载 HTML</button>
+          <button id="openMiniBtn" class="ghost">打开手机页</button>
+        </div>
+      </div>
+      <div class="subbar" id="tabBar"></div>
+      <div class="content">
+        <article class="paper" id="paper">
+          <div class="empty" id="empty">
+            <div class="card">
+              <div class="eyebrow">适合客户查看</div>
+              <h1 style="margin:0 0 12px">Markdown 转网页报告门户</h1>
+              <p style="margin:0;font-size:15px;line-height:1.8;">
+                这里支持多文件批量导入，适合把 Accio 输出的周报、日报、诊断报告统一成一个客户可浏览页面。
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sampleFiles = [
+      {
+        name: 'weekly_report_2026_22.md',
+        content: `# Weekly Report 2026 W22\n\n## Summary\n\n- Exposure up 18.7%\n- Conversion down 39.5%\n- Reply speed needs attention\n\n## Table\n\n| Metric | This Week | Last Week |\n| --- | ---: | ---: |\n| Visitors | 1,280 | 1,020 |\n| Inquiries | 36 | 29 |\n`
+      },
+      {
+        name: 'daily_scan_2026_06_02.md',
+        content: `# Daily Keyword Scan\n\n> Use America/Los_Angeles as the boundary.\n\n## Keywords to add\n\n- handheld milk frother\n- reusable coffee filter\n- stainless steel capsule\n`
+      }
+    ];
+
+    const state = {
+      files: [],
+      activeIndex: -1,
+      activeHtml: '',
+      activeMd: '',
+      showingMini: false,
+    };
+
+    const els = {
+      fileInput: document.getElementById('fileInput'),
+      dropzone: document.getElementById('dropzone'),
+      fileList: document.getElementById('fileList'),
+      tabBar: document.getElementById('tabBar'),
+      paper: document.getElementById('paper'),
+      empty: document.getElementById('empty'),
+      docTitle: document.getElementById('docTitle'),
+      docSubtitle: document.getElementById('docSubtitle'),
+      metaFile: document.getElementById('metaFile'),
+      metaChars: document.getElementById('metaChars'),
+      metaHeadings: document.getElementById('metaHeadings'),
+      sampleBtn: document.getElementById('sampleBtn'),
+      clearBtn: document.getElementById('clearBtn'),
+      copyMdBtn: document.getElementById('copyMdBtn'),
+      downloadHtmlBtn: document.getElementById('downloadHtmlBtn'),
+      openMiniBtn: document.getElementById('openMiniBtn'),
+    };
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    function inlineMd(text) {
+      let out = escapeHtml(text);
+      out = out.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2" />');
+      out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+      out = out.replace(/`([^`]+)`/g, '<code>$1</code>');
+      out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      out = out.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+      out = out.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      out = out.replace(/_([^_]+)_/g, '<em>$1</em>');
+      return out;
+    }
+    function slugify(text) {
+      return text.toLowerCase().trim().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '') || 'section';
+    }
+    function renderMarkdown(md) {
+      const lines = md.replace(/\r\n/g, '\n').split('\n');
+      const html = [];
+      const toc = [];
+      let i = 0, inCode = false, codeLang = '', codeBuffer = [], inUl = false, inOl = false, inQuote = false;
+      let paragraph = [];
+      let headingCount = 0;
+      const flushP = () => {
+        if (paragraph.length) {
+          html.push(`<p>${inlineMd(paragraph.join(' '))}</p>`);
+          paragraph = [];
+        }
+      };
+      const closeLists = () => {
+        if (inUl) { html.push('</ul>'); inUl = false; }
+        if (inOl) { html.push('</ol>'); inOl = false; }
+      };
+      const closeQuote = () => {
+        if (inQuote) { html.push('</blockquote>'); inQuote = false; }
+      };
+      const parseTable = (start) => {
+        const rows = [];
+        let j = start;
+        while (j < lines.length && /^\|.*\|$/.test(lines[j].trim())) {
+          rows.push(lines[j].trim());
+          j++;
+        }
+        if (rows.length < 2) return null;
+        const header = rows[0].slice(1,-1).split('|').map(s=>s.trim());
+        const body = rows.slice(2).map(row => row.slice(1,-1).split('|').map(s=>s.trim()));
+        let t = '<table><thead><tr>';
+        header.forEach(h => t += `<th>${inlineMd(h)}</th>`);
+        t += '</tr></thead><tbody>';
+        body.forEach(row => {
+          t += '<tr>';
+          row.forEach(cell => t += `<td>${inlineMd(cell)}</td>`);
+          t += '</tr>';
+        });
+        t += '</tbody></table>';
+        return { html: t, nextIndex: j - 1 };
+      };
+      while (i < lines.length) {
+        const raw = lines[i];
+        const line = raw.trimEnd();
+        const trimmed = line.trim();
+        if (inCode) {
+          if (/^```/.test(trimmed)) {
+            html.push(`<pre><code class="language-${escapeHtml(codeLang)}">${escapeHtml(codeBuffer.join('\n'))}</code></pre>`);
+            inCode = false; codeLang = ''; codeBuffer = [];
+          } else {
+            codeBuffer.push(raw);
+          }
+          i++; continue;
+        }
+        if (/^```/.test(trimmed)) {
+          flushP(); closeLists(); closeQuote();
+          inCode = true; codeLang = trimmed.slice(3).trim();
+          i++; continue;
+        }
+        if (!trimmed) { flushP(); closeLists(); closeQuote(); i++; continue; }
+        const table = parseTable(i);
+        if (table) { flushP(); closeLists(); closeQuote(); html.push(table.html); i = table.nextIndex + 1; continue; }
+        const heading = trimmed.match(/^(#{1,6})\s+(.*)$/);
+        if (heading) {
+          flushP(); closeLists(); closeQuote();
+          const level = heading[1].length;
+          const text = heading[2].trim();
+          const id = slugify(text);
+          toc.push({ level, text, id });
+          headingCount++;
+          html.push(`<h${level} id="${id}">${inlineMd(text)}</h${level}>`);
+          i++; continue;
+        }
+        if (/^>\s?/.test(trimmed)) {
+          flushP(); closeLists();
+          if (!inQuote) { html.push('<blockquote>'); inQuote = true; }
+          html.push(`<p>${inlineMd(trimmed.replace(/^>\s?/, ''))}</p>`);
+          i++; continue;
+        }
+        if (/^[-*+]\s+/.test(trimmed)) {
+          flushP(); closeQuote();
+          if (!inUl) { html.push('<ul>'); inUl = true; }
+          html.push(`<li>${inlineMd(trimmed.replace(/^[-*+]\s+/, ''))}</li>`);
+          i++; continue;
+        }
+        if (/^\d+\.\s+/.test(trimmed)) {
+          flushP(); closeQuote();
+          if (!inOl) { html.push('<ol>'); inOl = true; }
+          html.push(`<li>${inlineMd(trimmed.replace(/^\d+\.\s+/, ''))}</li>`);
+          i++; continue;
+        }
+        if (/^---+$/.test(trimmed)) {
+          flushP(); closeLists(); closeQuote(); html.push('<hr />'); i++; continue;
+        }
+        flushP(); closeLists(); closeQuote();
+        html.push(`<p>${inlineMd(trimmed)}</p>`);
+        i++;
+      }
+      flushP(); closeLists(); closeQuote();
+      return { html: html.join('\n'), toc, headingCount };
+    }
+    async function readFile(file) {
+      return { name: file.name, md: await file.text() };
+    }
+    function updateList() {
+      if (!state.files.length) {
+        els.fileList.innerHTML = '暂未加载文件。';
+        els.tabBar.innerHTML = '';
+        return;
+      }
+      els.fileList.innerHTML = state.files.map((f, idx) => `
+        <div class="file-item ${idx === state.activeIndex ? 'active' : ''}" data-idx="${idx}">
+          <strong>${escapeHtml(f.name)}</strong>
+          <span>${f.md.length} 字符 · ${f.toc.length} 个标题</span>
+        </div>
+      `).join('');
+      els.fileList.querySelectorAll('.file-item').forEach(el => {
+        el.addEventListener('click', () => setActive(Number(el.dataset.idx)));
+      });
+      els.tabBar.innerHTML = state.files.map((f, idx) => `<button class="tab ${idx === state.activeIndex ? 'active' : ''}" data-idx="${idx}">${escapeHtml(f.name)}</button>`).join('');
+      els.tabBar.querySelectorAll('.tab').forEach(el => el.addEventListener('click', () => setActive(Number(el.dataset.idx))));
+    }
+    function setActive(idx) {
+      const file = state.files[idx];
+      if (!file) return;
+      state.activeIndex = idx;
+      state.activeMd = file.md;
+      state.activeHtml = file.html;
+      els.paper.innerHTML = file.html || '<div class="empty"><div class="card"><h1>空内容</h1><p>当前没有可渲染的 Markdown。</p></div></div>';
+      els.docTitle.textContent = file.name.replace(/\.md$/i, '') || file.name;
+      els.docSubtitle.textContent = `已加载 ${file.md.length} 个字符，${file.headingCount} 个标题。`;
+      els.metaFile.textContent = file.name;
+      els.metaChars.textContent = String(file.md.length);
+      els.metaHeadings.textContent = String(file.headingCount);
+      els.empty?.remove?.();
+      updateList();
+    }
+    async function loadFiles(fileList) {
+      const files = await Promise.all(Array.from(fileList).map(readFile));
+      const parsed = files.map(f => {
+        const result = renderMarkdown(f.md);
+        return { ...f, ...result };
+      });
+      state.files = parsed;
+      state.activeIndex = parsed.length ? 0 : -1;
+      updateList();
+      if (parsed.length) setActive(0);
+    }
+    els.fileInput.addEventListener('change', e => { if (e.target.files?.length) loadFiles(e.target.files); });
+    els.dropzone.addEventListener('dragover', e => { e.preventDefault(); els.dropzone.classList.add('dragover'); });
+    els.dropzone.addEventListener('dragleave', () => els.dropzone.classList.remove('dragover'));
+    els.dropzone.addEventListener('drop', e => { e.preventDefault(); els.dropzone.classList.remove('dragover'); if (e.dataTransfer.files?.length) loadFiles(e.dataTransfer.files); });
+    els.sampleBtn.addEventListener('click', () => {
+      state.files = sampleFiles.map(f => ({ ...f, ...renderMarkdown(f.content) }));
+      state.activeIndex = 0;
+      updateList();
+      setActive(0);
+    });
+    els.clearBtn.addEventListener('click', () => {
+      state.files = [];
+      state.activeIndex = -1;
+      els.paper.innerHTML = '<div class="empty" id="empty"><div class="card"><div class="eyebrow">空白</div><h1 style="margin:0 0 12px">没有加载任何文件</h1><p style="margin:0;font-size:15px;line-height:1.8;">点击上方按钮或拖拽多个 `.md` 文件到左侧，开始批量查看。</p></div></div>';
+      els.docTitle.textContent = '报告预览';
+      els.docSubtitle.textContent = '选择一个文件开始预览，或直接上传多份报告。';
+      els.metaFile.textContent = '未加载';
+      els.metaChars.textContent = '0';
+      els.metaHeadings.textContent = '0';
+      updateList();
+    });
+    els.copyMdBtn.addEventListener('click', async () => {
+      if (!state.activeMd) return;
+      await navigator.clipboard.writeText(state.activeMd);
+      els.docSubtitle.textContent = '已复制当前 Markdown。';
+    });
+    els.downloadHtmlBtn.addEventListener('click', () => {
+      if (!state.activeHtml) return;
+      const fileName = (state.files[state.activeIndex]?.name || 'document').replace(/\.md$/i, '') + '.html';
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(fileName)}</title></head><body>${state.activeHtml}</body></html>`;
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+    els.openMiniBtn.addEventListener('click', () => {
+      const target = new URL('./report-miniapp.html', location.href);
+      target.searchParams.set('title', state.files[state.activeIndex]?.name || 'Markdown');
+      target.searchParams.set('md', state.activeMd || '');
+      location.href = target.toString();
+    });
+  </script>
+</body>
+</html>

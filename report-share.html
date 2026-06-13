@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>周报分享页</title>
+  <style>
+    :root{
+      --bg:#f3efe6;
+      --panel:#fffaf2;
+      --text:#1f1a17;
+      --muted:#72675c;
+      --line:#e1d5c4;
+      --accent:#0f766e;
+      --shadow:0 20px 60px rgba(31,26,23,.10);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top, rgba(15,118,110,.12), transparent 30%),
+        linear-gradient(180deg,#faf6ee 0%, #efe6d7 100%);
+    }
+    .phone{
+      max-width:480px;
+      min-height:100%;
+      margin:0 auto;
+      padding:14px 14px 24px;
+    }
+    .hero,.card{
+      background:rgba(255,250,242,.92);
+      border:1px solid rgba(225,213,196,.95);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+    }
+    .hero{
+      padding:18px 16px 16px;
+    }
+    .eyebrow{
+      display:inline-flex;
+      padding:6px 11px;
+      border-radius:999px;
+      background:rgba(15,118,110,.10);
+      color:var(--accent);
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+    h1{
+      margin:0 0 8px;
+      font-size:28px;
+      letter-spacing:-.03em;
+    }
+    p{margin:0;color:var(--muted);line-height:1.7;font-size:14px}
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+    button,a.btn{
+      border:0;
+      border-radius:16px;
+      padding:12px 14px;
+      font-weight:700;
+      cursor:pointer;
+      text-align:center;
+      text-decoration:none;
+      font-size:14px;
+    }
+    button{background:var(--text);color:#fff}
+    a.btn{background:#e8ddcf;color:var(--text)}
+    .meta{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+    .row{
+      background:rgba(255,255,255,.7);
+      border:1px solid rgba(225,213,196,.95);
+      border-radius:18px;
+      padding:12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-size:13px;
+    }
+    .row strong{font-weight:700}
+    .qr{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:120px 1fr;
+      gap:14px;
+      align-items:center;
+      background:rgba(255,255,255,.74);
+      border:1px solid rgba(225,213,196,.95);
+      border-radius:22px;
+      padding:14px;
+    }
+    .qr img{
+      width:120px;
+      height:120px;
+      object-fit:contain;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid #eee;
+    }
+    .qr h2{
+      margin:0 0 6px;
+      font-size:18px;
+    }
+    .qr p{font-size:13px}
+    .viewer{
+      margin-top:14px;
+      background:rgba(255,255,255,.9);
+      border:1px solid rgba(225,213,196,.95);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .viewer-head{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .viewer-head h2{
+      margin:0;
+      font-size:18px;
+      letter-spacing:-.02em;
+    }
+    .viewer-head span{
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    iframe{
+      width:100%;
+      height:72vh;
+      border:0;
+      display:block;
+      background:#fff;
+    }
+    .footer{
+      margin-top:12px;
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+      line-height:1.6;
+      padding-bottom:8px;
+    }
+    @media (max-width: 420px){
+      .actions{grid-template-columns:1fr}
+      .qr{grid-template-columns:1fr}
+      .qr img{width:100%;height:auto;max-width:180px;justify-self:center}
+      iframe{height:66vh}
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <section class="hero">
+      <div class="eyebrow">Latest Report</div>
+      <h1>周报最新页</h1>
+      <p>这里直接展示最新周报，不再保留固定分享页等旧结构。</p>
+
+      <div class="actions">
+        <button id="reload">刷新内容</button>
+      </div>
+
+      <div class="meta">
+        <div class="row">
+          <span>电脑端上传渲染</span>
+          <strong id="shareLinkDesktop">https://kentwu-730.github.io/weekly-report-share/md-viewer.html</strong>
+        </div>
+        <div class="row">
+          <span>电脑端最新成品</span>
+          <strong id="shareLinkLatest">https://kentwu-730.github.io/weekly-report-share/weekly_report/latest.html</strong>
+        </div>
+        <div class="row">
+          <span>手机端最新成品</span>
+          <strong id="shareLinkMobile">https://kentwu-730.github.io/weekly-report-share/weekly_report/latest.html</strong>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const reloadBtn = document.getElementById('reload');
+    const shareLinkDesktop = document.getElementById('shareLinkDesktop');
+    const shareLinkLatest = document.getElementById('shareLinkLatest');
+    const shareLinkMobile = document.getElementById('shareLinkMobile');
+    const desktopRenderUrl = "https://kentwu-730.github.io/weekly-report-share/md-viewer.html";
+    const latestReportUrl = "https://kentwu-730.github.io/weekly-report-share/weekly_report/latest.html";
+
+    async function reloadPage() {
+      location.reload();
+    }
+
+    async function loadLatest() {
+      shareLinkDesktop.textContent = desktopRenderUrl;
+      shareLinkLatest.textContent = latestReportUrl;
+      shareLinkMobile.textContent = latestReportUrl;
+    }
+
+    reloadBtn.addEventListener('click', reloadPage);
+    loadLatest();
+  </script>
+</body>
+</html>

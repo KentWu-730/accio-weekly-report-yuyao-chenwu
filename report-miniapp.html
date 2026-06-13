@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>报告小程序页</title>
+  <style>
+    :root{
+      --bg:#f3efe6;
+      --panel:#fffaf2;
+      --text:#1e1714;
+      --muted:#6c6258;
+      --line:#dfd2c0;
+      --accent:#0f766e;
+      --shadow:0 18px 48px rgba(30,23,20,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(15,118,110,.12), transparent 36%),
+        linear-gradient(180deg,#faf6ee 0%, #efe6d7 100%);
+      color:var(--text);
+    }
+    .phone{
+      max-width:460px;
+      min-height:100%;
+      margin:0 auto;
+      padding:14px 14px 18px;
+    }
+    .hero{
+      padding:18px 16px 16px;
+      background:rgba(255,250,242,.88);
+      border:1px solid rgba(223,210,192,.86);
+      border-radius:26px;
+      box-shadow:var(--shadow);
+    }
+    .pill{
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(15,118,110,.10);
+      color:var(--accent);
+      font-size:12px;
+      font-weight:700;
+    }
+    h1{margin:10px 0 8px;font-size:26px;line-height:1.15;letter-spacing:-.03em}
+    p{margin:0;color:var(--muted);line-height:1.65;font-size:14px}
+    .card{
+      margin-top:14px;
+      padding:14px;
+      background:rgba(255,250,242,.92);
+      border:1px solid rgba(223,210,192,.88);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+    }
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    button,input::file-selector-button{
+      border:0;
+      border-radius:999px;
+      padding:11px 14px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    button{background:var(--text);color:#fff}
+    button.secondary{background:#e9dfd1;color:var(--text)}
+    .dropzone{
+      margin-top:12px;
+      padding:14px;
+      border:1.5px dashed #cdbca7;
+      border-radius:18px;
+      background:rgba(255,255,255,.65);
+      color:var(--muted);
+      line-height:1.65;
+    }
+    textarea{
+      width:100%;
+      min-height:140px;
+      margin-top:12px;
+      resize:vertical;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px 14px;
+      font:inherit;
+      background:#fff;
+      color:var(--text);
+    }
+    .tabs{
+      display:flex;
+      gap:8px;
+      overflow:auto;
+      margin-top:14px;
+      padding-bottom:4px;
+    }
+    .tab{
+      flex:0 0 auto;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:13px;
+    }
+    .tab.active{
+      background:rgba(15,118,110,.10);
+      color:var(--accent);
+      border-color:rgba(15,118,110,.24);
+    }
+    .paper{
+      margin-top:14px;
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(223,210,192,.86);
+      border-radius:24px;
+      padding:18px 16px 20px;
+      box-shadow:var(--shadow);
+      overflow:auto;
+    }
+    .paper h1,.paper h2,.paper h3,.paper h4{line-height:1.22;letter-spacing:-.02em}
+    .paper h1{font-size:28px;margin:0 0 14px}
+    .paper h2{font-size:22px;margin:24px 0 10px}
+    .paper h3{font-size:18px;margin:20px 0 8px}
+    .paper p,.paper li{font-size:15px;line-height:1.8}
+    .paper ul,.paper ol{padding-left:1.25em}
+    .paper li{margin:4px 0}
+    .paper blockquote{
+      margin:16px 0;
+      padding:12px 14px;
+      border-left:4px solid var(--accent);
+      background:rgba(15,118,110,.06);
+      border-radius:0 12px 12px 0;
+    }
+    .paper table{
+      width:100%;
+      border-collapse:collapse;
+      display:block;
+      overflow:auto;
+      border-radius:14px;
+      margin:14px 0;
+    }
+    .paper th,.paper td{
+      border:1px solid #e2d7c8;
+      padding:9px 10px;
+      font-size:13px;
+      text-align:left;
+      vertical-align:top;
+    }
+    .paper thead th{background:#ede3d3}
+    .paper pre{
+      background:#111827;
+      color:#e5e7eb;
+      padding:14px;
+      border-radius:14px;
+      overflow:auto;
+    }
+    .paper code{
+      background:#efe7db;
+      padding:2px 6px;
+      border-radius:6px;
+      color:#3b2d20;
+      font-size:.95em;
+    }
+    .paper pre code{background:transparent;color:inherit;padding:0}
+    .meta{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+      flex-wrap:wrap;
+    }
+    .empty{
+      display:grid;
+      place-items:center;
+      min-height:45vh;
+      text-align:center;
+      color:var(--muted);
+    }
+    .empty .inner{
+      max-width:320px;
+      background:rgba(255,255,255,.8);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="hero">
+      <div class="pill">Mobile Report View</div>
+      <h1>报告小程序页</h1>
+      <p>适合手机查看周报渲染版，布局更像轻量小程序。支持拖拽单文件、粘贴内容和切换文件。</p>
+      <div class="row">
+        <button id="sampleBtn">载入示例</button>
+        <button id="clearBtn" class="secondary">清空</button>
+      </div>
+      <input id="fileInput" type="file" accept=".md,.markdown,text/plain" />
+      <div class="dropzone" id="dropzone">拖拽一个 `.md` 文件到这里，或者先载入示例。页面会把 Markdown 渲染成更适合手机阅读的排版。</div>
+      <textarea id="mdInput" placeholder="也可以直接粘贴 Markdown 内容"></textarea>
+      <div class="row">
+        <button id="renderBtn">渲染</button>
+        <button id="downloadBtn" class="secondary">下载 HTML</button>
+      </div>
+      <div class="meta">
+        <span id="metaFile">未加载</span>
+        <span id="metaStats">0 字符 · 0 标题</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tabs" id="tabs"></div>
+      <article class="paper" id="paper">
+        <div class="empty">
+          <div class="inner">
+            <div class="pill">Preview</div>
+            <h1 style="margin:10px 0 8px;font-size:24px">先加载一份报告</h1>
+            <p>这里会显示 Markdown 渲染后的内容，适合客户在手机上直接看，不需要碰原始 `.md`。</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <script>
+    const sample = `# Weekly Report\n\n## Highlights\n\n- Visitors up 25%\n- Inquiries up 24%\n- Reply speed improved\n\n> Mobile-friendly report preview.\n\n| Metric | This Week | Last Week |\n| --- | ---: | ---: |\n| Visitors | 1280 | 1020 |\n| Inquiries | 36 | 29 |\n`;
+
+    const state = { files: [], active: -1, md: '', html: '' };
+    const els = {
+      fileInput: document.getElementById('fileInput'),
+      dropzone: document.getElementById('dropzone'),
+      mdInput: document.getElementById('mdInput'),
+      paper: document.getElementById('paper'),
+      tabs: document.getElementById('tabs'),
+      metaFile: document.getElementById('metaFile'),
+      metaStats: document.getElementById('metaStats'),
+      sampleBtn: document.getElementById('sampleBtn'),
+      clearBtn: document.getElementById('clearBtn'),
+      renderBtn: document.getElementById('renderBtn'),
+      downloadBtn: document.getElementById('downloadBtn'),
+    };
+
+    function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+    function inlineMd(text){
+      let out = esc(text);
+      out = out.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,'<img alt="$1" src="$2" />');
+      out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+      out = out.replace(/`([^`]+)`/g,'<code>$1</code>');
+      out = out.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+      out = out.replace(/\*([^*]+)\*/g,'<em>$1</em>');
+      return out;
+    }
+    function slug(text){return text.toLowerCase().trim().replace(/[^\w\u4e00-\u9fa5]+/g,'-').replace(/^-+|-+$/g,'') || 'section';}
+    function render(md){
+      const lines = md.replace(/\r\n/g,'\n').split('\n');
+      const html = [];
+      const toc = [];
+      let i = 0, inCode = false, codeBuf = [], inUl = false, inOl = false, inQuote = false, para = [];
+      const flush = () => { if (para.length) { html.push(`<p>${inlineMd(para.join(' '))}</p>`); para = []; } };
+      const close = () => { if (inUl) { html.push('</ul>'); inUl = false; } if (inOl) { html.push('</ol>'); inOl = false; } if (inQuote) { html.push('</blockquote>'); inQuote = false; } };
+      const tableAt = (idx) => {
+        const rows = [];
+        let j = idx;
+        while (j < lines.length && /^\|.*\|$/.test(lines[j].trim())) { rows.push(lines[j].trim()); j++; }
+        if (rows.length < 2) return null;
+        const head = rows[0].slice(1,-1).split('|').map(s=>s.trim());
+        const body = rows.slice(2).map(row => row.slice(1,-1).split('|').map(s=>s.trim()));
+        let t = '<table><thead><tr>'; head.forEach(h => t += `<th>${inlineMd(h)}</th>`); t += '</tr></thead><tbody>';
+        body.forEach(row => { t += '<tr>'; row.forEach(cell => t += `<td>${inlineMd(cell)}</td>`); t += '</tr>'; });
+        t += '</tbody></table>';
+        return { html: t, next: j - 1 };
+      };
+      let headings = 0;
+      while (i < lines.length) {
+        const raw = lines[i];
+        const trimmed = raw.trim();
+        if (inCode) {
+          if (/^```/.test(trimmed)) {
+            html.push(`<pre><code>${esc(codeBuf.join('\n'))}</code></pre>`);
+            inCode = false; codeBuf = [];
+          } else codeBuf.push(raw);
+          i++; continue;
+        }
+        if (/^```/.test(trimmed)) { flush(); close(); inCode = true; i++; continue; }
+        if (!trimmed) { flush(); close(); i++; continue; }
+        const table = tableAt(i);
+        if (table) { flush(); close(); html.push(table.html); i = table.next + 1; continue; }
+        const h = trimmed.match(/^(#{1,6})\s+(.*)$/);
+        if (h) {
+          flush(); close();
+          const lv = h[1].length, text = h[2].trim(), id = slug(text);
+          headings++;
+          toc.push({ lv, text, id });
+          html.push(`<h${lv} id="${id}">${inlineMd(text)}</h${lv}>`);
+          i++; continue;
+        }
+        if (/^>\s?/.test(trimmed)) {
+          flush(); if (!inQuote) { html.push('<blockquote>'); inQuote = true; }
+          html.push(`<p>${inlineMd(trimmed.replace(/^>\s?/,''))}</p>`);
+          i++; continue;
+        }
+        if (/^[-*+]\s+/.test(trimmed)) {
+          flush(); if (!inUl) { html.push('<ul>'); inUl = true; }
+          html.push(`<li>${inlineMd(trimmed.replace(/^[-*+]\s+/,''))}</li>`);
+          i++; continue;
+        }
+        if (/^\d+\.\s+/.test(trimmed)) {
+          flush(); if (!inOl) { html.push('<ol>'); inOl = true; }
+          html.push(`<li>${inlineMd(trimmed.replace(/^\d+\.\s+/,''))}</li>`);
+          i++; continue;
+        }
+        flush(); close(); html.push(`<p>${inlineMd(trimmed)}</p>`); i++;
+      }
+      flush(); close();
+      return { html: html.join('\n'), toc, headings };
+    }
+    function setDoc(name, md){
+      state.md = md;
+      const result = render(md);
+      state.html = result.html;
+      els.paper.innerHTML = result.html || '<div class="empty"><div class="inner"><h1 style="margin:0 0 8px;font-size:22px">空内容</h1><p>没有可渲染的 Markdown。</p></div></div>';
+      els.metaFile.textContent = name || '未加载';
+      els.metaStats.textContent = `${md.length} 字符 · ${result.headings} 标题`;
+      els.tabs.innerHTML = result.toc.map(t => `<button class="tab" data-id="${t.id}">${esc(t.text)}</button>`).join('');
+      els.tabs.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => document.getElementById(btn.dataset.id)?.scrollIntoView({behavior:'smooth', block:'start'})));
+    }
+
+    function loadFromQuery() {
+      const params = new URLSearchParams(location.search);
+      const title = params.get('title');
+      const md = params.get('md');
+      if (md) {
+        const decodedMd = decodeURIComponent(md);
+        els.mdInput.value = decodedMd;
+        setDoc(title ? decodeURIComponent(title) : 'report.md', decodedMd);
+        return true;
+      }
+      return false;
+    }
+
+    async function loadFile(file){
+      const md = await file.text();
+      els.mdInput.value = md;
+      setDoc(file.name, md);
+    }
+    els.fileInput.addEventListener('change', e => {
+      const file = e.target.files?.[0];
+      if (file) loadFile(file);
+    });
+    els.dropzone.addEventListener('dragover', e => { e.preventDefault(); els.dropzone.style.borderColor = '#0f766e'; });
+    els.dropzone.addEventListener('dragleave', () => { els.dropzone.style.borderColor = ''; });
+    els.dropzone.addEventListener('drop', e => {
+      e.preventDefault();
+      els.dropzone.style.borderColor = '';
+      const file = e.dataTransfer.files?.[0];
+      if (file) loadFile(file);
+    });
+    els.sampleBtn.addEventListener('click', () => { els.mdInput.value = sample; setDoc('sample.md', sample); });
+    els.clearBtn.addEventListener('click', () => { els.mdInput.value = ''; setDoc('未加载', ''); });
+    els.renderBtn.addEventListener('click', () => setDoc('manual.md', els.mdInput.value || ''));
+    els.downloadBtn.addEventListener('click', () => {
+      const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(els.metaFile.textContent)}</title></head><body>${els.paper.innerHTML}</body></html>`;
+      const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (els.metaFile.textContent || 'report').replace(/\.md$/i,'') + '.html';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    if (!loadFromQuery()) {
+      setDoc('未加载', '');
+    }
+  </script>
+</body>
+</html>
