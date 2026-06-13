@@ -74,19 +74,15 @@ python3 build_github_pages_site.py
 - `build_github_pages_site.py` 会自动同步周报并产出可发布目录。
 - `publish-weekly-report.sh` 会在重建后自动把最新链接发到通知通道；如果本机存在 `accio-dingtalk-notify`，会优先走 Accio 通道，否则回退到 webhook。
 
-## 当前可用发布方式
+## 备用发布方式
 
-我已经验证过直接发布到 Cloudflare Pages 的方式：
+如果你之后需要迁移到 Cloudflare Pages，可以继续使用这条命令：
 
 ```bash
 npx --yes wrangler pages deploy site --project-name accio-weekly-report-share
 ```
 
-发布完成后，把得到的 `*.pages.dev` 地址写到 `public_site_url.txt`，再运行：
-
-```bash
-python3 build_github_pages_site.py
-```
+Cloudflare 这条线只作为备选，不是当前主发布路径。当前主路径仍然是 GitHub Pages。
 
 ## 上传到国内静态站时的目录
 

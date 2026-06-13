@@ -6,9 +6,9 @@
 - 直接拿到免费 `*.pages.dev` 地址
 - 公开页直接展示最新周报
 
-## 推荐原因
+## 说明
 
-Cloudflare Pages 是静态站托管，项目创建后会自动生成可访问的 `*.pages.dev` 域名，适合这个周报分享页。
+这条路径目前只是备用。当前主发布路径已经切到 GitHub Pages，Cloudflare 仅保留给未来迁移或对比使用。
 
 ## 已验证流程
 
@@ -35,7 +35,7 @@ python3 build_github_pages_site.py
 
 ## 你现在要做的
 
-如果要重新发布，只需要更新 `public_site_url.txt`，然后重新运行 `python3 build_github_pages_site.py`。这会同步：
+如果要重新发布到 Cloudflare，先更新 `public_site_url.txt`，然后重新运行 `python3 build_github_pages_site.py`。这会同步：
 
 - `site/index.html`
 - `site/weekly_report/latest.html`
